@@ -23,7 +23,7 @@ public class MvcController {
 	public ModelAndView testHtml(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
 
 		mav.addObject("what", "the best");
-		mav.setViewName("666");
+		mav.setViewName("666666");
 		return mav;
 	}
 
