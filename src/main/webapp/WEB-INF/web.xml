@@ -46,6 +46,26 @@
     <servlet-name>SpringMVC</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  <!-- druid监控 -->
+  <servlet>
+  <servlet-name>DruidStatView</servlet-name>
+  <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+  <init-param>
+  <!-- 用户名 -->
+  <param-name>loginUsername</param-name>
+  <param-value>druid</param-value>
+  </init-param>
+  <init-param>
+  <!-- 密码 -->
+  <param-name>loginPassword</param-name>
+  <param-value>bounter</param-value>
+  </init-param>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>DruidStatView</servlet-name>
+  <url-pattern>/druid/*</url-pattern>
+  </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
