@@ -9,23 +9,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ssm.cache.JedisUtil;
 import com.ssm.dao.UserMapper;
 
 @Controller
 @RequestMapping("/test")
-public class MvcController {
+public  class MvcController {
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private JedisUtil.Strings jdString;	
+	
 	@RequestMapping("tojson.json")
 	public JSONObject testJson(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
+		try {
+			System.out.println("???"+jdString.get("qq"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		result.put("user", userMapper.selectByPrimaryKey(1L));
 		return result;
 	}
 	
 	@RequestMapping("tojson.html")
 	public ModelAndView testHtml(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
-
+		jdString.set("qq", "bb");
+		System.out.println(jdString.get("qq"));
 		mav.addObject("what", "qqqqq");
 		mav.setViewName("666");
 		return mav;
