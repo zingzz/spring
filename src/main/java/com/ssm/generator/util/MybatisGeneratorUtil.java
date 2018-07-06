@@ -10,7 +10,11 @@ import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
-
+/**
+ * 修改配置文件generatorConfig.xml后 运行此文件
+ * @author Administrator
+ *
+ */
 public class MybatisGeneratorUtil {
 
 	public static void main(String[] args) throws Exception {
