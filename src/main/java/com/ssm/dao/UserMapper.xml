@@ -187,4 +187,14 @@
       login_state = #{loginState,jdbcType=SMALLINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+     <select id="getUserList" resultMap="BaseResultMap">
+   		select 
+   		<include refid="Base_Column_List" />
+   		from user
+   </select>
+   <select id="getUserByAccount" parameterType="String" resultMap="BaseResultMap">
+ 		select 
+ 		<include refid="Base_Column_List" />
+ 		from user where user_name=#{account,jdbcType=VARCHAR}
+ 	</select>
 </mapper>

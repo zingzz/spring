@@ -1,5 +1,7 @@
 package com.ssm.dao;
 
+import java.util.List;
+
 import com.ssm.entity.User;
 
 public interface UserMapper {
@@ -14,4 +16,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    
+    
+    List<User> getUserList();
+    User getUserByAccount(String account);
 }
