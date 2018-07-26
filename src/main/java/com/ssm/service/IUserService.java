@@ -1,11 +1,3 @@
-/**  
- * @Project: MySSM
- * @Title: IUserService.java
- * @Package com.myssm.yuan.service
- * @author yuan
- * @Copyright: 2016
- * @version V1.0  
-*/
 
 package com.ssm.service;
 

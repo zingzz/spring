@@ -1,12 +1,3 @@
-/**  
- * @Project: MySSM
- * @Title: UserServiceImpl.java
- * @Package com.myssm.yuan.service.impl
- * @author yuan
- * @date 2016��6��23�� ����3:46:48
- * @Copyright: 2016
- * @version V1.0  
-*/
 
 package com.ssm.service.impl;
 
