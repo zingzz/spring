@@ -23,10 +23,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  登录信息：${msg}
-    <form  action="login" method="post" commandName="login">  
-        用户名：<input id="username" name="username" />  
-                密码：<input id="password" type="password" name="password" />  
+    <form  action="u/submitLogin" method="post">  
+        用户名：<input id="nickname" name="nickname" />  
+                密码：<input id="pswd" type="password" name="pswd" />  
             记住我：<input type="checkbox" name="rememberMe" />  
         <input type="submit" name="submit" value="submit"/>  
     </form> 

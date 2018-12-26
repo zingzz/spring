@@ -18,7 +18,10 @@
                         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.ssm" />
-	
+	<context:component-scan base-package="com.ssm.*.service;com.ssm.*.*.service"/>
+	<bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+    	<property name="resultSetLogEnabled" value="true" />
+	</bean>
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:druid-dataSource.properties"/>  
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
          <!-- 数据库基本信息配置 -->
@@ -50,6 +53,11 @@
          <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
          <!-- 关闭abanded连接时输出错误日志 -->   
          <property name="logAbandoned" value="${logAbandoned}" />
+		 <property name="proxyFilters">
+	        <list>
+	            <ref bean="log-filter"/>
+	        </list>
+	     </property>
 	</bean>
 
 	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
@@ -70,12 +78,14 @@
     <bean name="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="close" scope="prototype">
         <constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
+	<bean id="baseMybatisDao" class="com.ssm.common.mybatis.BaseMybatisDao" >
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>	
 
 	<!-- 注解方式配置事务 -->
     <tx:annotation-driven/>
 	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
     
