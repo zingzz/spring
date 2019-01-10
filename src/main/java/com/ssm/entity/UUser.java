@@ -3,7 +3,8 @@ package com.ssm.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 用户
  */
@@ -91,8 +92,5 @@ public class UUser implements Serializable{
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
-    }
-    public String toString(){
-    	return JSONObject.fromObject(this).toString();
     }
 }

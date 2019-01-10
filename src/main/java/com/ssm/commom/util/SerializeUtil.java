@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
 
 /**
  * Java原生版的 Serialize
@@ -32,7 +33,7 @@ public class SerializeUtil {
             bos.close();
             rv = bos.toByteArray();
         } catch (Exception e) {
-        	LoggerUtils.fmtError(CLAZZ,e, "serialize error %s", JSONObject.fromObject(value));
+        	LoggerUtils.fmtError(CLAZZ,e, "serialize error %s", JSONObject.toJSON(value));
         } finally {
             close(os);
             close(bos);

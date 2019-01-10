@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
+
 /**
  * 权限角色
  * 
@@ -51,6 +53,6 @@ public class URole  implements Serializable{
         this.type = type;
     }
     public String toString(){
-    	return JSONObject.fromObject(this).toString();
+    	return JSONObject.toJSON(this).toString();
     }
 }

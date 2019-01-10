@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.commom.util.LoggerUtils;
 import com.ssm.common.controller.BaseController;
 import com.ssm.core.shiro.token.manager.TokenManager;
@@ -19,7 +20,6 @@ import com.ssm.entity.UUser;
 import com.ssm.user.manager.UserManager;
 import com.ssm.user.service.UUserService;
 
-import net.sf.json.JSONObject;
 
 /**
  * 
@@ -27,7 +27,7 @@ import net.sf.json.JSONObject;
  */
 @Controller
 @Scope(value="prototype")
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserCoreController extends BaseController {
 
 	@Resource
@@ -36,7 +36,7 @@ public class UserCoreController extends BaseController {
 	 * 个人资料
 	 * @return
 	 */
-	@RequestMapping(value="index",method=RequestMethod.GET)
+	@RequestMapping(value="/index",method=RequestMethod.GET)
 	public ModelAndView userIndex(){
 		
 		return new ModelAndView("user/index");
@@ -48,7 +48,7 @@ public class UserCoreController extends BaseController {
 	 * @param page
 	 * @return
 	 */
-	@RequestMapping(value="{page}",method=RequestMethod.GET)
+	@RequestMapping(value="/{page}",method=RequestMethod.GET)
 	public ModelAndView toPage(@PathVariable("page")String page){
 		return new ModelAndView(String.format("user/%s", page));
 	}
@@ -56,7 +56,7 @@ public class UserCoreController extends BaseController {
 	 * 密码修改
 	 * @return
 	 */
-	@RequestMapping(value="updatePswd",method=RequestMethod.POST)
+	@RequestMapping(value="/updatePswd",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> updatePswd(String pswd,String newPswd){
 		//根据当前登录的用户帐号 + 老密码，查询。
@@ -90,18 +90,18 @@ public class UserCoreController extends BaseController {
 	 * 个人资料修改
 	 * @return
 	 */
-	@RequestMapping(value="updateSelf",method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Object> updateSelf(UUser entity){
+	@RequestMapping(value="/updateSelf.json",method=RequestMethod.POST)
+	public JSONObject updateSelf(UUser entity){
+		JSONObject result= new JSONObject();
 		try {
 			userService.updateByPrimaryKeySelective(entity);
-			resultMap.put("status", 200);
-			resultMap.put("message", "修改成功!");
+			result.put("status", 200);
+			result.put("message", "修改成功!");
 		} catch (Exception e) {
-			resultMap.put("status", 500);
-			resultMap.put("message", "修改失败!");
-			LoggerUtils.fmtError(getClass(), e, "修改个人资料出错。[%s]", JSONObject.fromObject(entity).toString());
+			result.put("status", 500);
+			result.put("message", "修改失败!");
+			LoggerUtils.fmtError(getClass(), e, "修改个人资料出错。[%s]", JSONObject.toJSON(entity).toString());
 		}
-		return resultMap;
+		return result;
 	}
 }

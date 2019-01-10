@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.common.controller.BaseController;
 import com.ssm.common.page.Pagination;
 import com.ssm.permission.bo.RolePermissionAllocationBo;
@@ -22,7 +23,7 @@ import com.ssm.permission.service.RoleService;
  */
 @Controller
 @Scope(value="prototype")
-@RequestMapping("permission")
+@RequestMapping("/permission")
 public class PermissionAllocationController extends BaseController {
 	
 	@Autowired
@@ -36,12 +37,13 @@ public class PermissionAllocationController extends BaseController {
 	 * @param findContent
 	 * @return
 	 */
-	@RequestMapping(value="allocation")
-	public ModelAndView allocation(ModelMap modelMap,Integer pageNo,String findContent){
+	@RequestMapping(value="/allocation.json")
+	public JSONObject allocation(ModelMap modelMap,Integer pageNo,String findContent){
+		JSONObject result = new JSONObject();
 		modelMap.put("findContent", findContent);
 		Pagination<RolePermissionAllocationBo> boPage = roleService.findRoleAndPermissionPage(modelMap,pageNo,pageSize);
-		modelMap.put("page", boPage);
-		return new ModelAndView("permission/allocation");
+		result.put("page", boPage);
+		return result;
 	}
 	
 	/**
@@ -49,11 +51,12 @@ public class PermissionAllocationController extends BaseController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value="selectPermissionById")
-	@ResponseBody
-	public List<UPermissionBo> selectPermissionById(Long id){
+	@RequestMapping(value="/selectPermissionById.json")
+	public JSONObject selectPermissionById(Long id){
+		JSONObject result= new JSONObject();
 		List<UPermissionBo> permissionBos = permissionService.selectPermissionById(id);
-		return permissionBos;
+		result.put("data", permissionBos);
+		return result;
 	}
 	/**
 	 * 操作角色的权限
@@ -61,7 +64,7 @@ public class PermissionAllocationController extends BaseController {
 	 * @param ids		权限ID，以‘,’间隔
 	 * @return
 	 */
-	@RequestMapping(value="addPermission2Role")
+	@RequestMapping(value="/addPermission2Role")
 	@ResponseBody
 	public Map<String,Object> addPermission2Role(Long roleId,String ids){
 		return permissionService.addPermission2Role(roleId,ids);

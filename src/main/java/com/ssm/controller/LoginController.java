@@ -60,7 +60,6 @@ public class LoginController {
 		// return new ModelAndView("redirect:/login.jsp");
 		return mv;
 	}
-
 	// �?�?
 	@RequestMapping("/logout")
 	public void logout() {

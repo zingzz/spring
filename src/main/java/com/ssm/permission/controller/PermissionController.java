@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.commom.util.LoggerUtils;
 import com.ssm.common.controller.BaseController;
 import com.ssm.common.page.Pagination;
@@ -22,7 +23,7 @@ import com.ssm.permission.service.PermissionService;
  */
 @Controller
 @Scope(value="prototype")
-@RequestMapping("permission")
+@RequestMapping("/permission")
 public class PermissionController extends BaseController {
 	
 	@Autowired
@@ -34,38 +35,39 @@ public class PermissionController extends BaseController {
 	 * @param modelMap		参数回显
 	 * @return
 	 */
-	@RequestMapping(value="index")
-	public ModelAndView index(String findContent,ModelMap modelMap,Integer pageNo){
+	@RequestMapping(value="/index.json")
+	public JSONObject index(String findContent,ModelMap modelMap,Integer pageNo){
+		JSONObject result=new JSONObject();
 		modelMap.put("findContent", findContent);
 		Pagination<UPermission> permissions = permissionService.findPage(modelMap,pageNo,pageSize);
-		return new ModelAndView("permission/index","page",permissions);
+		result.put("pageList", permissions);
+		return result;
 	}
 	/**
 	 * 权限添加
 	 * @param role
 	 * @return
 	 */
-	@RequestMapping(value="addPermission",method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Object> addPermission(UPermission psermission){
+	@RequestMapping(value="/addPermission.json",method=RequestMethod.POST)
+	public JSONObject addPermission(UPermission psermission){
+		JSONObject result= new JSONObject();
 		try {
 			UPermission entity = permissionService.insertSelective(psermission);
-			resultMap.put("status", 200);
-			resultMap.put("entity", entity);
+			result.put("status", 200);
+			result.put("entity", entity);
 		} catch (Exception e) {
-			resultMap.put("status", 500);
-			resultMap.put("message", "添加失败，请刷新后再试！");
+			result.put("status", 500);
+			result.put("message", "添加失败，请刷新后再试！");
 			LoggerUtils.fmtError(getClass(), e, "添加权限报错。source[%s]", psermission.toString());
 		}
-		return resultMap;
+		return result;
 	}
 	/**
 	 * 删除权限，根据ID，但是删除权限的时候，需要查询是否有赋予给角色，如果有角色在使用，那么就不能删除。
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value="deletePermissionById",method=RequestMethod.POST)
-	@ResponseBody
+	@RequestMapping(value="/deletePermissionById",method=RequestMethod.POST)
 	public Map<String,Object> deleteRoleById(String ids){
 		return permissionService.deletePermissionById(ids);
 	}

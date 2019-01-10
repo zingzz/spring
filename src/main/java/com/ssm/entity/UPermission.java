@@ -2,7 +2,8 @@ package com.ssm.entity;
 
 import java.io.Serializable;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
 
 /**
  * 权限实体
@@ -41,6 +42,6 @@ public class UPermission implements Serializable {
 	}
 
 	public String toString() {
-		return JSONObject.fromObject(this).toString();
+		return JSONObject.toJSON(this).toString();
 	}
 }

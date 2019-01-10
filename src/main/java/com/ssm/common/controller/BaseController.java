@@ -83,7 +83,7 @@ public class BaseController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected Map<String, Object> prepareParams(Object obj, HttpServletRequest request) throws Exception {
+	protected Map<String, String> prepareParams(Object obj, HttpServletRequest request) throws Exception {
 		if (request != null) {
 			String pageNoStr   = (String)request.getParameter(PARAM_PAGE_NO),
 				   pageSizeStr = (String)request.getParameter(pageSizeName);
@@ -95,20 +95,20 @@ public class BaseController {
 			}
 		}
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, String> params = new HashMap<String, String>();
 		params = BeanUtils.describe(obj);
 		params = handleParams(params);
 		// 回填值项
 		//BeanUtils.populate(obj, params);
 		return params;
 	}
-	private Map<String, Object> handleParams(Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
+	private Map<String, String> handleParams(Map<String, String> params) {
+		Map<String, String> result = new HashMap<String, String>();
 		if (null != params) {
-			Set<Entry<String, Object>> entrySet = params.entrySet();
+			Set<Entry<String, String>> entrySet = params.entrySet();
 			
-			for (Iterator<Entry<String, Object>> it = entrySet.iterator(); it.hasNext(); ) {
-				Entry<String, Object> entry = it.next();
+			for (Iterator<Entry<String, String>> it = entrySet.iterator(); it.hasNext(); ) {
+				Entry<String, String> entry = it.next();
 				if (entry.getValue() != null) {
 					result.put(entry.getKey(), StringUtils.trimToEmpty((String)entry.getValue()));
 				}				

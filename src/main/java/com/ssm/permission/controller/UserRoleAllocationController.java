@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.common.controller.BaseController;
 import com.ssm.common.page.Pagination;
 import com.ssm.permission.bo.URoleBo;
@@ -24,7 +25,7 @@ import com.ssm.user.service.UUserService;
  */
 @Controller
 @Scope(value="prototype")
-@RequestMapping("role")
+@RequestMapping("/role")
 public class UserRoleAllocationController extends BaseController {
 	@Autowired
 	UUserService userService;
@@ -37,12 +38,13 @@ public class UserRoleAllocationController extends BaseController {
 	 * @param findContent
 	 * @return
 	 */
-	@RequestMapping(value="allocation")
-	public ModelAndView allocation(ModelMap modelMap,Integer pageNo,String findContent){
+	@RequestMapping(value="/allocation.json")
+	public JSONObject allocation(ModelMap modelMap,Integer pageNo,String findContent){
+		JSONObject result= new JSONObject();
 		modelMap.put("findContent", findContent);
 		Pagination<UserRoleAllocationBo> boPage = userService.findUserAndRole(modelMap,pageNo,pageSize);
-		modelMap.put("page", boPage);
-		return new ModelAndView("role/allocation");
+		result.put("page", boPage);
+		return result;
 	}
 	
 	/**
@@ -50,11 +52,12 @@ public class UserRoleAllocationController extends BaseController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value="selectRoleByUserId")
-	@ResponseBody
-	public List<URoleBo> selectRoleByUserId(Long id){
+	@RequestMapping(value="/selectRoleByUserId.json")
+	public JSONObject selectRoleByUserId(Long id){
+		JSONObject result= new JSONObject();
 		List<URoleBo> bos = userService.selectRoleByUserId(id);
-		return bos;
+		result.put("URoleBo", bos);
+		return result;
 	}
 	/**
 	 * 操作用户的角色

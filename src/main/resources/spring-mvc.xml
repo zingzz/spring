@@ -22,7 +22,12 @@
 	<mvc:resources mapping="/demo/**" location="/demo/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
-
+    <mvc:interceptors>  
+	   <mvc:interceptor>  
+	       <mvc:mapping path="/**" />       
+	       <bean class="com.ssm.common.intercepter.CommonReturnValueInterceptor"/>  
+	   </mvc:interceptor>  
+ 	</mvc:interceptors>
 	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
 		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">

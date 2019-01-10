@@ -2,7 +2,8 @@ package com.ssm.entity;
 
 import java.io.Serializable;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 角色{@link URole}和 权限{@link UPermission}中间表
  * 
@@ -36,6 +37,6 @@ public class URolePermission  implements Serializable{
         this.pid = pid;
     }
     public String toString(){
-    	return JSONObject.fromObject(this).toString();
+    	return JSONObject.toJSON(this).toString();
     }
 }

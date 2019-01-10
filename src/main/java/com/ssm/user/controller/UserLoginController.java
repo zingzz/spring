@@ -12,21 +12,26 @@ import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.commom.util.LoggerUtils;
 import com.ssm.commom.util.StringUtils;
 import com.ssm.commom.util.VerifyCodeUtils;
 import com.ssm.common.controller.BaseController;
 import com.ssm.core.shiro.token.manager.TokenManager;
 import com.ssm.entity.UUser;
+import com.ssm.user.bo.UserOnlineBo;
 import com.ssm.user.manager.UserManager;
 import com.ssm.user.service.UUserService;
 
-import net.sf.json.JSONObject;
+
 
 /**
  * 
@@ -35,20 +40,36 @@ import net.sf.json.JSONObject;
  * 
  */
 @Controller
-@Scope(value="prototype")
 @RequestMapping("/u")
 public class UserLoginController extends BaseController {
 
 	@Resource
 	UUserService userService;
 	
-	
 	@RequestMapping("/tojson.json")
-	public JSONObject testJson(HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject testJson(HttpServletRequest request, HttpServletResponse response,String zz) {
 		JSONObject result = new JSONObject();
 		result.put("user", "aa");
-		result.put("pwd", "bB");
+//		result.put("pwd", "bB");
+//		user.setEmail("999");
+//		UUser jj= new UUser();
+//		result.put("jj", jj);
 		return result;
+	}
+	@RequestMapping("/tojson2.html")
+	public ModelAndView testJson2(HttpServletRequest request, HttpServletResponse response, UUser us,ModelMap map) {
+		ModelAndView mav = new ModelAndView();
+		mav.clear();
+		System.out.println(request.getParameter("pswd"));
+		mav.setViewName("/index");
+		return mav;
+	}
+	
+	@RequestMapping("/tojson3.json")
+	public ModelMap testJson3(HttpServletRequest request, HttpServletResponse response,UUser us,UserOnlineBo bo,String zz) {
+		ModelMap  modelMap =new ModelMap();
+		modelMap.addAttribute("AA", "BB");
+		return modelMap;
 	}
 	
 	
@@ -58,7 +79,6 @@ public class UserLoginController extends BaseController {
 	 */
 	@RequestMapping(value="/login.html",method=RequestMethod.GET)
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response,ModelAndView mav){
-		mav.addObject("what", "qqqqq");
 		mav.setViewName("/login");
 		return mav;
 	}
@@ -77,20 +97,24 @@ public class UserLoginController extends BaseController {
 	 * @param entity	UUser实体
 	 * @return
 	 */
-	@RequestMapping(value="subRegister",method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Object> subRegister(String vcode,UUser entity){
-		resultMap.put("status", 400);
+	@RequestMapping(value="/subRegister.json",method=RequestMethod.POST)
+	public JSONObject subRegister(String vcode,UUser entity){
+		JSONObject result = new JSONObject();
+		if(StringUtils.isBlank(entity.getEmail()) || StringUtils.isBlank(entity.getPswd())) {
+			result.put("message", "帐号、密码 不能为空！");
+			return result;
+		}
+		result.put("status", 400);
 		if(!VerifyCodeUtils.verifyCode(vcode)){
-			resultMap.put("message", "验证码不正确！");
-			return resultMap;
+			result.put("message", "验证码不正确！");
+			return result;
 		}
 		String email =  entity.getEmail();
 		
 		UUser user = userService.findUserByEmail(email);
 		if(null != user){
-			resultMap.put("message", "帐号|Email已经存在！");
-			return resultMap;
+			result.put("message", "帐号|Email已经存在！");
+			return result;
 		}
 		Date date = new Date();
 		entity.setCreateTime(date);
@@ -101,12 +125,12 @@ public class UserLoginController extends BaseController {
 		entity.setStatus(UUser._1);
 		
 		entity = userService.insert(entity);
-		LoggerUtils.fmtDebug(getClass(), "注册插入完毕！", JSONObject.fromObject(entity).toString());
+		LoggerUtils.fmtDebug(getClass(), "注册插入完毕！", JSONObject.toJSON(entity).toString());
 		entity = TokenManager.login(entity, Boolean.TRUE);
-		LoggerUtils.fmtDebug(getClass(), "注册后，登录完毕！", JSONObject.fromObject(entity).toString());
-		resultMap.put("message", "注册成功！");
-		resultMap.put("status", 200);
-		return resultMap;
+		LoggerUtils.fmtDebug(getClass(), "注册后，登录完毕！", JSONObject.toJSON(entity).toString());
+		result.put("message", "注册成功！");
+		result.put("status", 200);
+		return result;
 	}
 	/**
 	 * 登录提交
@@ -116,13 +140,12 @@ public class UserLoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value="/submitLogin",method=RequestMethod.POST)
-	@ResponseBody
 	public Map<String,Object> submitLogin(UUser entity,Boolean rememberMe,HttpServletRequest request){
-		
+		JSONObject result=new JSONObject();
 		try {
 			entity = TokenManager.login(entity,rememberMe);
-			resultMap.put("status", 200);
-			resultMap.put("message", "登录成功");
+			result.put("status", 200);
+			result.put("message", "登录成功");
 			
 			
 			/**
@@ -143,36 +166,36 @@ public class UserLoginController extends BaseController {
 				url = request.getContextPath() + "/user/index.shtml";
 			}
 			//跳转地址
-			resultMap.put("back_url", url);
+			result.put("back_url", url);
 		/**
 		 * 这里其实可以直接catch Exception，然后抛出 message即可，但是最好还是各种明细catch 好点。。
 		 */
 		} catch (DisabledAccountException e) {
-			resultMap.put("status", 500);
-			resultMap.put("message", "帐号已经禁用。");
+			result.put("status", 500);
+			result.put("message", "帐号已经禁用。");
 		} catch (Exception e) {
-			resultMap.put("status", 500);
-			resultMap.put("message", "帐号或密码错误");
+			result.put("status", 500);
+			result.put("message", "帐号或密码错误");
 		}
 			
-		return resultMap;
+		return result;
 	}
 	
 	/**
 	 * 退出
 	 * @return
 	 */
-	@RequestMapping(value="logout",method =RequestMethod.GET)
-	@ResponseBody
-	public Map<String,Object> logout(){
+	@RequestMapping(value="/logout.json",method =RequestMethod.GET)
+	public JSONObject logout(){
+		JSONObject result= new JSONObject();
 		try {
 			TokenManager.logout();
-			resultMap.put("status", 200);
+			result.put("status", 200);
 		} catch (Exception e) {
-			resultMap.put("status", 500);
+			result.put("status", 500);
 			logger.error("errorMessage:" + e.getMessage());
 			LoggerUtils.fmtError(getClass(), e, "退出出现错误，%s。", e.getMessage());
 		}
-		return resultMap;
+		return result;
 	}
 }

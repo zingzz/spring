@@ -23,5 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
     This is my JSP page. <br>
      <a href="/user/getUserList">test</a>
+     ${UUser.pswd}<br/>
+     ${qq.ww }
   </body>
 </html>

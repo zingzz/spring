@@ -14,11 +14,12 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.commom.util.LoggerUtils;
 import com.ssm.core.shiro.session.CustomSessionManager;
 import com.ssm.core.shiro.session.SessionStatus;
 
-import net.sf.json.JSONObject;
+
 
 /**
  * 
@@ -79,7 +80,7 @@ public class SimpleAuthFilter extends AccessControlFilter {
 			throws IOException {
 		hresponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = hresponse.getWriter();
-		out.println(JSONObject.fromObject(resultMap).toString());
+		out.println(JSONObject.toJSON(resultMap).toString());
 		out.flush();
 		out.close();
 	}

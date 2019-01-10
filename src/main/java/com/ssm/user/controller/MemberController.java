@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ssm.common.controller.BaseController;
 import com.ssm.common.page.Pagination;
 import com.ssm.core.shiro.session.CustomSessionManager;
@@ -25,7 +26,7 @@ import com.ssm.user.service.UUserService;
  */
 @Controller
 @Scope(value="prototype")
-@RequestMapping("member")
+@RequestMapping("/member")
 public class MemberController extends BaseController {
 	/***
 	 * 用户手动操作Session
@@ -38,31 +39,35 @@ public class MemberController extends BaseController {
 	 * 用户列表管理
 	 * @return
 	 */
-	@RequestMapping(value="list")
-	public ModelAndView list(ModelMap map,Integer pageNo,String findContent){
-		
+	@RequestMapping(value="/list.json")
+	public JSONObject list(ModelMap map,Integer pageNo,String findContent){
+		JSONObject result= new JSONObject();
 		map.put("findContent", findContent);
 		Pagination<UUser> page = userService.findByPage(map,pageNo,pageSize);
-		map.put("page", page);
-		return new ModelAndView("member/list");
+		result.put("userPageList", page);
+		return result;
 	}
 	/**
 	 * 在线用户管理
 	 * @return
 	 */
-	@RequestMapping(value="online")
-	public ModelAndView online(){
+	@RequestMapping(value="/online.json")
+	public JSONObject online(){
+		JSONObject result= new JSONObject();
 		List<UserOnlineBo> list = customSessionManager.getAllUser();
-		return new ModelAndView("member/online","list",list);
+		result.put("onlineUserList", list);
+		return result;
 	}
 	/**
 	 * 在线用户详情
 	 * @return
 	 */
-	@RequestMapping(value="onlineDetails/{sessionId}",method=RequestMethod.GET)
-	public ModelAndView onlineDetails(@PathVariable("sessionId")String sessionId){
+	@RequestMapping(value="/onlineDetails/{sessionId}.json",method=RequestMethod.GET)
+	public JSONObject onlineDetails(@PathVariable("sessionId")String sessionId){
+		JSONObject result= new JSONObject();
 		UserOnlineBo bo = customSessionManager.getSession(sessionId);
-		return new ModelAndView("member/onlineDetails","bo",bo);
+		result.put("olUserDetail", bo);
+		return result;
 	}
 	/**
 	 * 改变Session状态

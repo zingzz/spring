@@ -2,7 +2,9 @@ package com.ssm.entity;
 
 import java.io.Serializable;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
+
+
 /**
  * 用户{@link UUser} 和角色 {@link URole} 中间表
  * 
@@ -37,6 +39,6 @@ public class UUserRole  implements Serializable{
         this.rid = rid;
     }
     public String toString(){
-    	return JSONObject.fromObject(this).toString();
+    	return JSONObject.toJSON(this).toString();
     }
 }

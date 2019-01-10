@@ -107,7 +107,7 @@
 	
 	<!-- session 校验单个用户是否多次登录 -->
 	<bean id="kickoutSessionFilter"   class="com.ssm.core.shiro.filter.KickoutSessionFilter">  
-	    <property name="kickoutUrl" value="/u/login.shtml?kickout"/>  
+	    <property name="kickoutUrl" value="/u/login.html?kickout"/>  
 	</bean>  
 	
 	
@@ -169,10 +169,10 @@
 	
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
-		<property name="loginUrl" value="/u/login" />
+		<property name="loginUrl" value="/u/login.html" />
 		<!--	TODO 待提取	-->
 		<property name="successUrl" value="/" />
-		<property name="unauthorizedUrl" value="/?login" />
+		<property name="unauthorizedUrl" value="/login.html" />
 		
 <!--	初始配置，现采用自定义	-->
 <!--		<property name="filterChainDefinitions" >-->

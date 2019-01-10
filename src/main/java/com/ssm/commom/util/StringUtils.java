@@ -12,8 +12,9 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import sun.misc.BASE64Decoder;
 
 
@@ -112,13 +113,13 @@ public class StringUtils extends org.apache.commons.lang.StringUtils{
 	 * @param args
 	 * @return
 	 */
-	public static net.sf.json.JSONObject isJSONObject(String args) {
-		net.sf.json.JSONObject result = null ;
+	public static JSONObject isJSONObject(String args) {
+		JSONObject result = null ;
 		if(isBlank(args)){
 			return result ;
 		}
 		try {
-			return net.sf.json.JSONObject.fromObject(args.trim());
+			return JSONObject.parseObject(args.trim());
 		} catch (Exception e) {
 			return result ;
 		}
@@ -128,20 +129,20 @@ public class StringUtils extends org.apache.commons.lang.StringUtils{
 	 * @param args
 	 * @return
 	 */
-	public static net.sf.json.JSONArray isJSONArray(Object args) {
+	public static JSONArray isJSONArray(Object args) {
 		JSONArray result = new JSONArray();
 		if(isBlank(args)){
 			return null ;
 		}
-		if(args instanceof  net.sf.json.JSONArray){
+		if(args instanceof  JSONArray){
 			
-			net.sf.json.JSONArray arr = (net.sf.json.JSONArray)args;
+			JSONArray arr = (JSONArray)args;
 			for (Object json : arr) {
-				if(json != null && json instanceof net.sf.json.JSONObject){
+				if(json != null && json instanceof JSONObject){
 					result.add(json);
 					continue;
 				}else{
-					result.add(JSONObject.fromObject(json));
+					result.add(JSONObject.toJSON(json));
 				}
 			}
 			return result;

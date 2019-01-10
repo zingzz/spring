@@ -6,10 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.PropertyFilter;
+//import net.sf.json.JSONArray;
+//import net.sf.json.JSONObject;
+//import net.sf.json.JsonConfig;
+//import net.sf.json.util.PropertyFilter;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+//import net.sf.json.JsonConfig;
+//import net.sf.json.util.PropertyFilter;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -109,13 +113,13 @@ public class VinuxPostMethod extends PostMethod {
 				throw new RuntimeException( "HTTP请求错误，请求地址为：[" + url
 						+ "],状态为：[" + status + "]");
 			}
-			if (StringUtils.indexOf(JSONObject, type) > 0) {
-				return net.sf.json.JSONObject.fromObject(result);
-			}
-	
-			if (StringUtils.indexOf(JSONArray, type) > 0) {
-				return net.sf.json.JSONArray.fromObject(result);
-			}
+//			if (StringUtils.indexOf(JSONObject, type) > 0) {
+//				return  net.sf.json.JSONObject.fromObject(result);
+//			}
+//	
+//			if (StringUtils.indexOf(JSONArray, type) > 0) {
+//				return net.sf.json.JSONArray.fromObject(result);
+//			}
 			return result;
 		}finally{
 			this.releaseConnection();
@@ -139,7 +143,7 @@ public class VinuxPostMethod extends PostMethod {
 	 * @param parameter
 	 */
 	public void setJSONParameter(JSONObject parameter) {
-		for (Iterator<?> iter = parameter.keys(); iter.hasNext();) {
+		for (Iterator<?> iter = parameter.keySet().iterator(); iter.hasNext();) {
 			String key = (String) iter.next();
 			Object str = parameter.get(key);
 			String value = null == str ? "" : StringUtils.trimToEmpty(str
@@ -246,22 +250,22 @@ public class VinuxPostMethod extends PostMethod {
 	}
 	
 	
-	public JsonConfig getConfig(){
-		JsonConfig config = new JsonConfig();
-		// 实现属性过滤器接口并重写apply()方法
-		PropertyFilter pf = new PropertyFilter() {
-			@Override
-			// 返回true则跳过此属性，返回false则正常转换
-			public boolean apply(Object source, String name, Object value) {
-				if (StringUtils.isBlank(value)) {
-					return true;
-				}
-				return false;
-			}
-		};
-		// 将过滤器放入json-config中
-		config.setJsonPropertyFilter(pf);
-		
-		return config;
-	}
+//	public JsonConfig getConfig(){
+//		JsonConfig config = new JsonConfig();
+//		// 实现属性过滤器接口并重写apply()方法
+//		PropertyFilter pf = new PropertyFilter() {
+//			@Override
+//			// 返回true则跳过此属性，返回false则正常转换
+//			public boolean apply(Object source, String name, Object value) {
+//				if (StringUtils.isBlank(value)) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		};
+//		// 将过滤器放入json-config中
+//		config.setJsonPropertyFilter(pf);
+//		
+//		return config;
+//	}
 }

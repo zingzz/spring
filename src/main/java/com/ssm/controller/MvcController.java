@@ -6,11 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ssm.cache.JedisUtil;
 import com.ssm.dao.UserMapper;
+import com.ssm.entity.UUser;
 
 @Controller
 @RequestMapping("/test")
@@ -31,7 +33,14 @@ public  class MvcController {
 		result.put("user", userMapper.selectByPrimaryKey(1L));
 		return result;
 	}
-	
+	@RequestMapping("/to.json")
+	@ResponseBody
+	public JSONObject testJson(UUser user) {
+		JSONObject result = new JSONObject();
+		result.put("user", "aa");
+		result.put("pwd", "bB");
+		return result;
+	}
 	@RequestMapping("tojson.html")
 	public ModelAndView testHtml(HttpServletRequest request, HttpServletResponse response,ModelAndView mav) {
 		jdString.set("qq", "bb");
